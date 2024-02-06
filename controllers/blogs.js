@@ -30,4 +30,17 @@ blogsRouter.post('/', async (request, response) => {
   response.status(201).json(savedBlog)
 })
 
+blogsRouter.delete('/:id', async (request, response) => {
+  try {
+    const deletedBlog = await Blog.findByIdAndDelete(request.params.id)
+    if (!deletedBlog) {
+      return response.status(404).json({ error: 'Blog not found' })
+    }
+    response.status(204).end()
+  } catch (error) {
+    console.error('Error deleting blog:', error.message)
+    response.status(500).json({ error: 'Internal server error' })
+  }
+})
+
 module.exports = blogsRouter
