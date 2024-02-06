@@ -6,12 +6,8 @@ const api = supertest(app)
 const Blog = require('../models/blog')
 
 beforeEach(async () => {
-  try {
-    await Blog.deleteMany({})
-    await Blog.insertMany(helper.initialBlogs)
-  } catch (error) {
-    console.error('Error inserting blogs:', error)
-  }
+  await Blog.deleteMany({})
+  await Blog.insertMany(helper.initialBlogs)
 })
 
 test('blogs are returned as json', async () => {
@@ -116,6 +112,25 @@ test('deleting a non-existent blog returns status code 404', async () => {
     .expect(404)
 })
 
+test('updating a blog post', async () => {
+  const blogsAtStart = await helper.blogsInDb()
+  const blogToUpdate = blogsAtStart[0]
+
+  const updatedBlog = {
+    ...blogToUpdate,
+    likes: blogToUpdate.likes + 1,
+  }
+
+  await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(updatedBlog)
+    .expect(200)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  const updatedBlogInDb = blogsAtEnd.find(b => b.id === blogToUpdate.id)
+
+  expect(updatedBlogInDb.likes).toBe(updatedBlog.likes)
+})
 
 afterAll(async () => {
   await mongoose.connection.close()
