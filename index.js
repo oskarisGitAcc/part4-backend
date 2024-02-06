@@ -4,6 +4,7 @@ const morgan = require('morgan')
 const app = express()
 const cors = require('cors')
 const mongoose = require('mongoose')
+const logger = require('./utils/logger')
 
 const blogSchema = new mongoose.Schema({
   title: String,
@@ -18,9 +19,9 @@ const mongoUrl = process.env.MONGODB_URI
 
 mongoose.set('strictQuery',false)
 mongoose.connect(mongoUrl).then(() => {
-  console.log('connected to MongoDB')
+  logger.info('connected to MongoDB')
 }).catch((error) => {
-  console.log('error connecting to mongoDB: ', error.message)
+  logger.error('error connecting to mongoDB: ', error.message)
 })
 
 morgan.token('postData', (req) => {
@@ -35,7 +36,7 @@ const unknownEndpoint = (request, response) => {
 }
 
 const errorHandler = (error, request, response, next) => {
-  console.error(error.message)
+  logger.error(error.message)
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
@@ -69,5 +70,5 @@ app.use(errorHandler)
 
 const PORT = process.env.PORT || 3003
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+  logger.info(`Server running on port ${PORT}`)
 })
