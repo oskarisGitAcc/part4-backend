@@ -8,12 +8,10 @@ const Blog = require('../models/blog')
 beforeEach(async () => {
   try {
     await Blog.deleteMany({})
-    const insertedBlogs = await Blog.insertMany(helper.initialBlogs)
-    console.log('Inserted blogs:', insertedBlogs)
+    await Blog.insertMany(helper.initialBlogs)
   } catch (error) {
     console.error('Error inserting blogs:', error)
   }
-
 })
 
 test('blogs are returned as json', async () => {
@@ -26,6 +24,12 @@ test('blogs are returned as json', async () => {
 test('all blogs are returned', async () => {
   const response = await api.get('/api/blogs')
   expect(response.body).toHaveLength(helper.initialBlogs.length)
+})
+
+test('blog post has id property', async () => {
+  const blogs = await helper.blogsInDb()
+  const firstBlog = blogs[0]
+  expect(firstBlog.id).toBeDefined()
 })
 
 afterAll(async () => {
