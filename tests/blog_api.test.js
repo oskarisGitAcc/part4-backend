@@ -53,6 +53,22 @@ test('creating a new blog post works', async () => {
   expect(titles).toContain('Test Blog')
 })
 
+test('missing likes property defaults to 0', async () => {
+  const newBlogWithoutLikes = {
+    title: 'Test Blog Without Likes',
+    author: 'Test Author Without Likes',
+    url: 'https://testblogwithoutlikes.com'
+  }
+
+  const response = await api
+    .post('/api/blogs')
+    .send(newBlogWithoutLikes)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  expect(response.body.likes).toBe(0)
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
