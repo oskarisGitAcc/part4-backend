@@ -27,6 +27,7 @@ morgan.token('postData', (req) => {
   return JSON.stringify(req.body)
 })
 
+app.use(middleware.tokenExtractor)
 app.use(cors())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :postData'))
 app.use(express.json())
