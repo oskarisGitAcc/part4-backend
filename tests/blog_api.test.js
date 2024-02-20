@@ -5,6 +5,9 @@ const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
 
+// token obtained by running login POST command via post_requests.rest
+const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY1ZDRiMWM1OWNlNjc4MDkwOTlmMzYxNCIsImlhdCI6MTcwODQ0OTA2MH0.fCO4uq4uqCnmkYLH404N-xZ7sled45nSK2cxXjqdczw'
+
 beforeEach(async () => {
   await Blog.deleteMany({})
   await Blog.insertMany(helper.initialBlogs)
@@ -29,15 +32,18 @@ test('blog post has id property', async () => {
 })
 
 test('creating a new blog post works', async () => {
+
   const newBlog = {
     title: 'Test Blog',
     author: 'Test Author',
     url: 'https://testblog.com',
-    likes: 5
+    likes: 5,
+    user: '65d4b1c59ce67809099f3614'
   }
 
   await api
     .post('/api/blogs')
+    .set('Authorization', `Bearer ${authToken}`)
     .send(newBlog)
     .expect(201)
     .expect('Content-Type', /application\/json/)
@@ -53,11 +59,13 @@ test('missing likes property defaults to 0', async () => {
   const newBlogWithoutLikes = {
     title: 'Test Blog Without Likes',
     author: 'Test Author Without Likes',
-    url: 'https://testblogwithoutlikes.com'
+    url: 'https://testblogwithoutlikes.com',
+    user: '65d4b1c59ce67809099f3614'
   }
 
   const response = await api
     .post('/api/blogs')
+    .set('Authorization', `Bearer ${authToken}`)
     .send(newBlogWithoutLikes)
     .expect(201)
     .expect('Content-Type', /application\/json/)
@@ -73,6 +81,7 @@ test('missing title returns status code 400', async () => {
 
   await api
     .post('/api/blogs')
+    .set('Authorization', `Bearer ${authToken}`)
     .send(newBlog)
     .expect(400)
 })
@@ -80,11 +89,13 @@ test('missing title returns status code 400', async () => {
 test('missing url returns status code 400', async () => {
   const newBlog = {
     title: 'Test Title',
-    author: 'Test Author'
+    author: 'Test Author',
+    user: '65d4b1c59ce67809099f3614'
   }
 
   await api
     .post('/api/blogs')
+    .set('Authorization', `Bearer ${authToken}`)
     .send(newBlog)
     .expect(400)
 })

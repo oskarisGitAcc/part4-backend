@@ -1,5 +1,6 @@
 POST http://localhost:3003/api/blogs HTTP/1.1
-content-type: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY1ZDRiMWM1OWNlNjc4MDkwOTlmMzYxNCIsImlhdCI6MTcwODQ0Njk2M30.VE0YaEpManODUllcwYjcV52YpKDLf_NzzcKyrHCHrPk
 
 {
     "title": "First Blog",
@@ -10,9 +11,9 @@ content-type: application/json
 }
 
 ###
-
 POST http://localhost:3003/api/blogs HTTP/1.1
-content-type: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InB5eWtrb28xIiwiaWQiOiI2NWQ0YjI0NDljZTY3ODA5MDk5ZjM2MWEiLCJpYXQiOjE3MDg0NDY3OTd9.xg7arh17bVvkTxsrjpD4OKh8YsSZebfz9loyqzPJyik
 
 {
     "title": "Second Blog",
@@ -23,9 +24,8 @@ content-type: application/json
 }
 
 ###
-
 POST http://localhost:3003/api/users HTTP/1.1
-content-type: application/json
+Content-Type: application/json
 
 {
     "username": "root",
@@ -34,9 +34,8 @@ content-type: application/json
 }
 
 ###
-
 POST http://localhost:3003/api/users HTTP/1.1
-content-type: application/json
+Content-Type: application/json
 
 {
     "username": "pyykkoo1",
@@ -45,11 +44,19 @@ content-type: application/json
 }
 
 ###
-
 POST http://localhost:3003/api/login HTTP/1.1
-content-type: application/json
+Content-Type: application/json
 
 {
     "username": "pyykkoo1",
     "password": "secrettt"
+}
+
+###
+POST http://localhost:3003/api/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "root",
+    "password": "salainen"
 }
