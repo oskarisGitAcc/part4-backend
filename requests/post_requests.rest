@@ -5,7 +5,21 @@ content-type: application/json
     "title": "First Blog",
     "author": "Mrs. X",
     "url": "http://first-blog.com",
-    "likes": 16
+    "likes": 16,
+    "user": "65d4b1c59ce67809099f3614"
+}
+
+###
+
+POST http://localhost:3003/api/blogs HTTP/1.1
+content-type: application/json
+
+{
+    "title": "Second Blog",
+    "author": "Mrs. X",
+    "url": "http://second-blog.com",
+    "likes": 3,
+    "user": "65d4b2449ce67809099f361a"
 }
 
 ###
