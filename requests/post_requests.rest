@@ -43,3 +43,13 @@ content-type: application/json
     "name": "Oskari",
     "password": "secrettt"
 }
+
+###
+
+POST http://localhost:3003/api/login HTTP/1.1
+content-type: application/json
+
+{
+    "username": "pyykkoo1",
+    "password": "secrettt"
+}
