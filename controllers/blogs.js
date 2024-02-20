@@ -46,14 +46,30 @@ blogsRouter.post('/', async (request, response) => {
 
 blogsRouter.delete('/:id', async (request, response) => {
   try {
-    const deletedBlog = await Blog.findByIdAndRemove(request.params.id)
-    if (!deletedBlog) {
-      return response.status(404).json({ error: 'Blog not found' })
+    const token = request.token
+    if (!token) {
+      return response.status(401).json({ error: 'token missing' })
     }
+
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if (!decodedToken.id) {
+      return response.status(401).json({ error: 'invalid token' })
+    }
+
+    const blog = await Blog.findById(request.params.id)
+    if (!blog) {
+      return response.status(404).json({ error: 'blog not found' })
+    }
+
+    if (blog.user.toString() !== decodedToken.id) {
+      return response.status(403).json({ error: 'you are not authorized to delete this blog' })
+    }
+
+    await Blog.findByIdAndRemove(request.params.id)
     response.status(204).end()
   } catch (error) {
     console.error('Error deleting blog:', error.message)
-    response.status(500).json({ error: 'Internal server error' })
+    response.status(500).json({ error: 'Internal server error', message: error.message })
   }
 })
 
