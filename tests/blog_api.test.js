@@ -105,7 +105,7 @@ test('a blog can be deleted', async () => {
 })
 
 test('deleting a non-existent blog returns status code 404', async () => {
-  const nonExistentId = await helper.nonExistingId()
+  const nonExistentId = await helper.nonExistingBlogId()
 
   await api
     .delete(`/api/blogs/${nonExistentId}`)
