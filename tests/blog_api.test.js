@@ -5,12 +5,27 @@ const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
 
-// token obtained by running login POST command via post_requests.rest
-const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY1ZDRiMWM1OWNlNjc4MDkwOTlmMzYxNCIsImlhdCI6MTcwODQ0OTA2MH0.fCO4uq4uqCnmkYLH404N-xZ7sled45nSK2cxXjqdczw'
+// token obtained by running login POST command for root user via post.rest
+const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY1ZDRiMWM1OWNlNjc4MDkwOTlmMzYxNCIsImlhdCI6MTcwOTAyMzE4OH0.EDgfQ9j5ebWICOAR4cAXV8xKk1tks1rLJRINEZA6kU4'
 
 beforeEach(async () => {
   await Blog.deleteMany({})
   await Blog.insertMany(helper.initialBlogs)
+})
+
+describe('POST /api/login', () => {
+  it('should return a token when login credentials are correct', async () => {
+    const response = await api
+      .post('/api/login')
+      .send({
+        username: 'root',
+        password: 'salainen'
+      })
+      .expect(200)
+      .expect('Content-Type', /json/)
+
+    expect(response.body).toHaveProperty('token')
+  })
 })
 
 test('blogs are returned as json', async () => {
@@ -106,6 +121,7 @@ test('a blog can be deleted', async () => {
 
   await api
     .delete(`/api/blogs/${blogToDelete.id}`)
+    .set('Authorization', `Bearer ${authToken}`)
     .expect(204)
 
   const blogsAtEnd = await helper.blogsInDb()
@@ -120,6 +136,7 @@ test('deleting a non-existent blog returns status code 404', async () => {
 
   await api
     .delete(`/api/blogs/${nonExistentId}`)
+    .set('Authorization', `Bearer ${authToken}`)
     .expect(404)
 })
 
